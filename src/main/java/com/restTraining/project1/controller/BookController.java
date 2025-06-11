@@ -46,7 +46,7 @@ public class BookController {
                 .orElse(null);
     }
 
-    @PostMapping()
+    @PostMapping
     public void createBook(@RequestBody Book newBook) {
         boolean isNewBook = books.stream()
                 .noneMatch(existingBook -> existingBook.getTitle().equalsIgnoreCase(newBook.getTitle()));
