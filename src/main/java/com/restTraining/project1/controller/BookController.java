@@ -33,4 +33,11 @@ public class BookController {
         return books;
     }
 
+    @GetMapping("/api/books/{title}")
+    public Book getBookByTitle(@PathVariable String title) {
+        return books.stream()
+                .filter(book -> book.getTitle().equalsIgnoreCase(title))
+                .findFirst()
+                .orElse(null);
+    }
 }
