@@ -2,6 +2,7 @@ package com.restTraining.project1.controller;
 
 import com.restTraining.project1.entity.Book;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -18,12 +19,12 @@ public class BookController {
 
     private void initializeBooks() {
         books.addAll(List.of(
-                new Book("Tiitle one", "Author one", "science"),
-                new Book("Tiitle two", "Author two", "science"),
-                new Book("Tiitle three", "Author three", "history"),
-                new Book("Tiitle four", "Author four", "math"),
-                new Book("Tiitle five", "Author five", "math"),
-                new Book("Tiitle six", "Author six", "math")
+                new Book("Title one", "Author one", "science"),
+                new Book("Title two", "Author two", "science"),
+                new Book("Title three", "Author three", "history"),
+                new Book("Title four", "Author four", "math"),
+                new Book("Title five", "Author five", "math"),
+                new Book("Title six", "Author six", "math")
         ));
     }
 
@@ -31,4 +32,5 @@ public class BookController {
     public List<Book> getBooks() {
         return books;
     }
+
 }
