@@ -5,6 +5,7 @@ import com.restTraining.project1.entity.Book;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class BookController {
         ));
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<Book> getBooks(@RequestParam(required = false) String category) {
         if (category == null || category.isEmpty()) {
@@ -42,6 +44,7 @@ public class BookController {
                 .toList();
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
     public Book getBookById(@PathVariable @Min(value = 1) Long id) {
         return books.stream()
@@ -50,6 +53,7 @@ public class BookController {
                 .orElse(null);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public void createBook(@Valid @RequestBody BookRequest newBook) {
         long id = books.isEmpty() ? 1 : books.getLast().getId() + 1;
@@ -59,6 +63,7 @@ public class BookController {
         books.add(book);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
     public void updateBook(@PathVariable @Min(value = 1)  Long id,@Valid @RequestBody BookRequest bookRequest) {
         for (int i = 0; i < books.size(); i++) {
@@ -70,6 +75,7 @@ public class BookController {
         }
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT) //it is a good practice to use this annotation for delete operations, as it indicates that the request was successful and there is no content to return.
     @DeleteMapping("/{id}")
     public void deleteBook(@PathVariable @Min(value = 1)  Long id) {
         books.removeIf(book -> book.getId().equals(id));
