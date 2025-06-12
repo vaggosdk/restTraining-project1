@@ -75,14 +75,16 @@ public class BookController {
     @Operation(summary = "Update a book", description = "Update the details of an existing book")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
-    public void updateBook(@Parameter(description = "Id of the book to update") @PathVariable @Min(value = 1) Long id, @Valid @RequestBody BookRequest bookRequest) {
+    public Book updateBook(@Parameter(description = "Id of the book to update") @PathVariable @Min(value = 1) Long id, @Valid @RequestBody BookRequest bookRequest) {
         for (int i = 0; i < books.size(); i++) {
             if (books.get(i).getId().equals(id)) {
                 Book updatedBook = convertToBook(bookRequest, id);
                 books.set(i, updatedBook);
-                return;
+                return updatedBook;
             }
         }
+
+        throw new BookNotFoundException("Book with id " + id + " not found");
     }
 
     @Operation(summary = "Delete a book", description = "Remove a book from the list")
@@ -90,6 +92,11 @@ public class BookController {
     //it is a good practice to use this annotation for delete operations, as it indicates that the request was successful and there is no content to return.
     @DeleteMapping("/{id}")
     public void deleteBook(@Parameter(description = "Id of the book to delete") @PathVariable @Min(value = 1) Long id) {
+        books.stream()
+                .filter(book -> book.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new BookNotFoundException("Book with id " + id + " not found"));
+
         books.removeIf(book -> book.getId().equals(id));
     }
 
