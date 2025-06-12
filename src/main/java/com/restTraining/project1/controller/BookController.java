@@ -1,5 +1,7 @@
 package com.restTraining.project1.controller;
 
+import com.restTraining.project1.exception.BookErrorResponse;
+import com.restTraining.project1.exception.BookNotFoundException;
 import com.restTraining.project1.request.BookRequest;
 import com.restTraining.project1.entity.Book;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -55,7 +58,7 @@ public class BookController {
         return books.stream()
                 .filter(book -> book.getId().equals(id))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new BookNotFoundException("Book with id " + id + " not found"));
     }
 
     @Operation(summary = "Create a new book", description = "Add a new book to the list")
@@ -92,5 +95,15 @@ public class BookController {
 
     private Book convertToBook(BookRequest bookRequest, Long id) {
         return new Book(id, bookRequest.getTitle(), bookRequest.getAuthor(), bookRequest.getCategory(), bookRequest.getRating());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<BookErrorResponse> handleBookNotFoundException(BookNotFoundException ex) {
+        BookErrorResponse errorResponse = new BookErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }
