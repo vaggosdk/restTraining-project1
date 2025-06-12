@@ -1,17 +1,29 @@
 package com.restTraining.project1.entity;
 
 public class Book {
+    private Long id;
     private String title;
     private String author;
     private String category;
+    private int rating;
 
     public Book() {
     }
 
-    public Book(String title, String author, String category) {
+    public Book(Long id, String title, String author, String category, int rating) {
+        this.id = id;
         this.title = title;
         this.author = author;
         this.category = category;
+        this.rating = rating;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -36,5 +48,13 @@ public class Book {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }
