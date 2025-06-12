@@ -1,5 +1,6 @@
 package com.restTraining.project1.controller;
 
+import com.restTraining.project1.request.BookRequest;
 import com.restTraining.project1.entity.Book;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,16 +20,16 @@ public class BookController {
     private void initializeBooks() {
         books.addAll(List.of(
                 new Book(1L, "Computer Science Pro", "Chad Darby", "Computer Science", 5),
-                new Book(2L,"Java Spring Master", "Eric Roby", "Computer Science", 5),
-                new Book(3L,"Why 1+1 Rocks", "Adil A.", "Math",5),
-                new Book(4L,"How Bears Hibernate", "Bob B.", "Science",2),
-                new Book(5L,"A Pirate's Treasure", "Curt C.", "History",3),
-                new Book(6L,"Why 2+2 is Better", "Dan D.", "Computer Science",1)
+                new Book(2L, "Java Spring Master", "Eric Roby", "Computer Science", 5),
+                new Book(3L, "Why 1+1 Rocks", "Adil A.", "Math", 5),
+                new Book(4L, "How Bears Hibernate", "Bob B.", "Science", 2),
+                new Book(5L, "A Pirate's Treasure", "Curt C.", "History", 3),
+                new Book(6L, "Why 2+2 is Better", "Dan D.", "Computer Science", 1)
         ));
     }
 
     @GetMapping
-    public List<Book> getBooks(@RequestParam (required = false) String category ) {
+    public List<Book> getBooks(@RequestParam(required = false) String category) {
         if (category == null || category.isEmpty()) {
             return books;
         }
@@ -47,13 +48,12 @@ public class BookController {
     }
 
     @PostMapping
-    public void createBook(@RequestBody Book newBook) {
-        boolean isNewBook = books.stream()
-                .noneMatch(existingBook -> existingBook.getTitle().equalsIgnoreCase(newBook.getTitle()));
+    public void createBook(@RequestBody BookRequest newBook) {
+        long id = books.isEmpty() ? 1 : books.getLast().getId() + 1;
 
-        if (isNewBook){
-            books.add(newBook);
-        }
+        Book book = convertToBook(newBook, id);
+
+        books.add(book);
     }
 
     @PutMapping("/{id}")
@@ -69,5 +69,9 @@ public class BookController {
     @DeleteMapping("/{id}")
     public void deleteBook(@PathVariable Long id) {
         books.removeIf(book -> book.getId().equals(id));
+    }
+
+    private Book convertToBook(BookRequest bookRequest, Long id) {
+        return new Book(id, bookRequest.getTitle(), bookRequest.getAuthor(), bookRequest.getCategory(), bookRequest.getRating());
     }
 }
