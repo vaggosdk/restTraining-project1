@@ -1,6 +1,5 @@
 package com.restTraining.project1.controller;
 
-import com.restTraining.project1.exception.BookErrorResponse;
 import com.restTraining.project1.exception.BookNotFoundException;
 import com.restTraining.project1.request.BookRequest;
 import com.restTraining.project1.entity.Book;
@@ -10,7 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -104,23 +102,4 @@ public class BookController {
         return new Book(id, bookRequest.getTitle(), bookRequest.getAuthor(), bookRequest.getCategory(), bookRequest.getRating());
     }
 
-    @ExceptionHandler
-    public ResponseEntity<BookErrorResponse> handleBookNotFoundException(BookNotFoundException ex) {
-        BookErrorResponse errorResponse = new BookErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                ex.getMessage(),
-                System.currentTimeMillis()
-        );
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<BookErrorResponse> handleBookNotFoundException(Exception ex) {
-        BookErrorResponse errorResponse = new BookErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Invalid request",
-                System.currentTimeMillis()
-        );
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
 }
