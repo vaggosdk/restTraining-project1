@@ -2,6 +2,9 @@ package com.restTraining.project1.controller;
 
 import com.restTraining.project1.request.BookRequest;
 import com.restTraining.project1.entity.Book;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -40,7 +43,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public Book getBookById(@PathVariable Long id) {
+    public Book getBookById(@PathVariable @Min(value = 1) Long id) {
         return books.stream()
                 .filter(book -> book.getId().equals(id))
                 .findFirst()
@@ -48,7 +51,7 @@ public class BookController {
     }
 
     @PostMapping
-    public void createBook(@RequestBody BookRequest newBook) {
+    public void createBook(@Valid @RequestBody BookRequest newBook) {
         long id = books.isEmpty() ? 1 : books.getLast().getId() + 1;
 
         Book book = convertToBook(newBook, id);
@@ -57,7 +60,7 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public void updateBook(@PathVariable Long id, @RequestBody BookRequest bookRequest) {
+    public void updateBook(@PathVariable @Min(value = 1)  Long id,@Valid @RequestBody BookRequest bookRequest) {
         for (int i = 0; i < books.size(); i++) {
             if (books.get(i).getId().equals(id)) {
                 Book updatedBook = convertToBook(bookRequest, id);
@@ -68,7 +71,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteBook(@PathVariable Long id) {
+    public void deleteBook(@PathVariable @Min(value = 1)  Long id) {
         books.removeIf(book -> book.getId().equals(id));
     }
 
